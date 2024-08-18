@@ -4,6 +4,7 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="UoUfOS" name="JuceDJ">
     <GROUP id="{8C4CD701-7194-790F-F7A6-0660A671BD2D}" name="Source">
+      <FILE id="W3SIxE" name="AudioMixer.h" compile="0" resource="0" file="Source/AudioMixer.h"/>
       <FILE id="FBJuba" name="AudioPlayer.h" compile="0" resource="0" file="Source/AudioPlayer.h"/>
       <FILE id="pbVFog" name="AudioPlayerComponent.h" compile="0" resource="0"
             file="Source/AudioPlayerComponent.h"/>

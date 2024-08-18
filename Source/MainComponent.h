@@ -1,6 +1,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "AudioMixer.h"
+#include "AudioPlayer.h"
 #include "AudioPlayerComponent.h"
 
 namespace juce_dj
@@ -9,6 +11,8 @@ namespace juce_dj
     {
     public:
         MainComponent() :
+            player1(mixer, AudioMixer::One),
+            player2(mixer, AudioMixer::Two),
             playerComponent1(player1, formatManager),
             playerComponent2(player2, formatManager)
         {
@@ -39,20 +43,17 @@ namespace juce_dj
 
         void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override
         {
-            player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
-            player2.prepareToPlay(samplesPerBlockExpected, sampleRate);
+            mixer.prepareToPlay(samplesPerBlockExpected, sampleRate);
         }
 
         void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override
         {
-            // TODO: get from mixer
-            player1.getNextAudioBlock(bufferToFill);
+            mixer.getNextAudioBlock(bufferToFill);
         }
 
         void releaseResources() override
         {
-            player1.releaseResources();
-            player2.releaseResources();
+            mixer.releaseResources();
         }
 
         void paint(juce::Graphics& g) override
@@ -75,6 +76,7 @@ namespace juce_dj
 
     private:
         juce::AudioFormatManager formatManager;
+        AudioMixer mixer;
         AudioPlayer player1, player2;
         AudioPlayerComponent playerComponent1, playerComponent2;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
