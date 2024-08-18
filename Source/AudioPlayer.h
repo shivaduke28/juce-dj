@@ -22,8 +22,8 @@ namespace juce_dj
 
         void setSource(juce::PositionableAudioSource* source, double sampleRate)
         {
-            readerSource.reset(source);
             transportSource.setSource(source, 0, nullptr, sampleRate);
+            readerSource.reset(source);
         }
 
         void start()
