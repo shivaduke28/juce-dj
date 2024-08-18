@@ -46,5 +46,7 @@ namespace juce_dj
         juce::AudioTransportSource transportSource;
         juce::ResamplingAudioSource resamplingSource;
         AudioMixer& mixer;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPlayer)
     };
 }

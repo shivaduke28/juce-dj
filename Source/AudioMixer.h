@@ -64,5 +64,7 @@ namespace juce_dj
         juce::MixerAudioSource mixerSource;
         juce::AudioSource* source1 = nullptr;
         juce::AudioSource* source2 = nullptr;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioMixer)
     };
 }
