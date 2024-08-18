@@ -7,6 +7,8 @@
       <FILE id="YChEwz" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="Mgnu5n" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
     </GROUP>
+    <FILE id="pbVFog" name="AudioPlayerComponent.h" compile="0" resource="0"
+          file="Source/AudioPlayerComponent.h"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
