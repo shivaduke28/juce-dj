@@ -1,16 +1,22 @@
 #pragma once
 
 #include "AudioPlayer.h"
+#include "WaveformComponent.h"
 #include <JuceHeader.h>
+
 
 namespace juce_dj
 {
-    class AudioPlayerComponent : public juce::Component
+    class AudioPlayerComponent : public juce::Component, public juce::Timer
     {
     public:
-        AudioPlayerComponent(AudioPlayer& audioPlayer, juce::AudioFormatManager& formatManager) :
+        AudioPlayerComponent(AudioPlayer& audioPlayer,
+            juce::AudioFormatManager& formatManager,
+            WaveformComponent& waveformComponent
+        ) :
             formatManager(formatManager),
-            audioPlayer(audioPlayer)
+            audioPlayer(audioPlayer),
+            waveformComponent(waveformComponent)
         {
             setSize(400, 400);
             addAndMakeVisible(openButton);
@@ -27,6 +33,8 @@ namespace juce_dj
 
             addAndMakeVisible(titleLabel);
             titleLabel.setText("No loaded", juce::NotificationType::dontSendNotification);
+
+            startTimerHz(40);
         }
 
         ~AudioPlayerComponent() override
@@ -47,6 +55,12 @@ namespace juce_dj
             stopButton.setBounds(bounds.removeFromTop(50));
         }
 
+        void timerCallback() override
+        {
+            // WaveformComponent may have a reference to AudioPlayer instead.
+            waveformComponent.setPosition(audioPlayer.getPosition());
+        }
+
     private:
         juce::TextButton openButton, playPauseButton, stopButton;
         juce::Label titleLabel;
@@ -54,6 +68,7 @@ namespace juce_dj
         juce::AudioFormatManager& formatManager;
 
         AudioPlayer& audioPlayer;
+        WaveformComponent& waveformComponent;
 
         void onOpenButtonClicked()
         {
@@ -75,6 +90,7 @@ namespace juce_dj
                             auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
                             titleLabel.setText(file.getFileNameWithoutExtension(), juce::sendNotification);
                             audioPlayer.setSource(newSource.release(), reader->sampleRate);
+                            waveformComponent.setSource(new juce::FileInputSource(file));
                         }
                     }
                 });

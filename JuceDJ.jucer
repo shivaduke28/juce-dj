@@ -10,6 +10,8 @@
             file="Source/AudioPlayerComponent.h"/>
       <FILE id="YChEwz" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="Mgnu5n" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="GMOj7z" name="WaveformComponent.h" compile="0" resource="0"
+            file="Source/WaveformComponent.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>

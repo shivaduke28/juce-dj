@@ -36,6 +36,11 @@ namespace juce_dj
             transportSource.stop();
         }
 
+        double getPosition()
+        {
+            return transportSource.getCurrentPosition();
+        }
+
     private:
         std::unique_ptr<juce::PositionableAudioSource> readerSource;
         juce::AudioTransportSource transportSource;

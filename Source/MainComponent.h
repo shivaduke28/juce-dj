@@ -4,6 +4,7 @@
 #include "AudioMixer.h"
 #include "AudioPlayer.h"
 #include "AudioPlayerComponent.h"
+#include "WaveformComponent.h"
 
 namespace juce_dj
 {
@@ -13,8 +14,10 @@ namespace juce_dj
         MainComponent() :
             player1(mixer, AudioMixer::One),
             player2(mixer, AudioMixer::Two),
-            playerComponent1(player1, formatManager),
-            playerComponent2(player2, formatManager)
+            waveformComponent1(formatManager),
+            waveformComponent2(formatManager),
+            playerComponent1(player1, formatManager, waveformComponent1),
+            playerComponent2(player2, formatManager, waveformComponent2)
         {
             setSize(900, 600);
 
@@ -34,6 +37,8 @@ namespace juce_dj
 
             addAndMakeVisible(playerComponent1);
             addAndMakeVisible(playerComponent2);
+            addAndMakeVisible(waveformComponent1);
+            addAndMakeVisible(waveformComponent2);
         }
 
         ~MainComponent() override
@@ -65,7 +70,8 @@ namespace juce_dj
         {
             auto bounds = getLocalBounds();
             // thumbnail
-            bounds.removeFromTop(50);
+            waveformComponent1.setBounds(bounds.removeFromTop(50));
+            waveformComponent2.setBounds(bounds.removeFromTop(50));
             // deck1
             playerComponent1.setBounds(bounds.removeFromLeft(400));
             // deck2
@@ -79,6 +85,8 @@ namespace juce_dj
         AudioMixer mixer;
         AudioPlayer player1, player2;
         AudioPlayerComponent playerComponent1, playerComponent2;
+        WaveformComponent waveformComponent1;
+        WaveformComponent waveformComponent2;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
     };
 }
