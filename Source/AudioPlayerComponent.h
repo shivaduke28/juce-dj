@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AudioPlayer.h"
 #include <JuceHeader.h>
 
 namespace juce_dj
@@ -7,7 +8,9 @@ namespace juce_dj
     class AudioPlayerComponent : public juce::Component
     {
     public:
-        AudioPlayerComponent(juce::AudioFormatManager& formatManager) : formatManager(formatManager)
+        AudioPlayerComponent(AudioPlayer& audioPlayer, juce::AudioFormatManager& formatManager) :
+            formatManager(formatManager),
+            audioPlayer(audioPlayer)
         {
             setSize(400, 400);
             addAndMakeVisible(openButton);
@@ -16,8 +19,11 @@ namespace juce_dj
 
             addAndMakeVisible(playPauseButton);
             playPauseButton.setButtonText("play/pause");
+            playPauseButton.onClick = [this] { onPlayPauseButtonClicked(); };
+
             addAndMakeVisible(stopButton);
             stopButton.setButtonText("stop");
+            stopButton.onClick = [this] {onStopButtonClicked(); };
 
             addAndMakeVisible(titleLabel);
             titleLabel.setText("No loaded", juce::NotificationType::dontSendNotification);
@@ -47,6 +53,8 @@ namespace juce_dj
         std::unique_ptr<juce::FileChooser> chooser;
         juce::AudioFormatManager& formatManager;
 
+        AudioPlayer& audioPlayer;
+
         void onOpenButtonClicked()
         {
             chooser = std::make_unique<juce::FileChooser>("Select a mp3 file to play...",
@@ -66,11 +74,20 @@ namespace juce_dj
                         {
                             auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
                             titleLabel.setText(file.getFileNameWithoutExtension(), juce::sendNotification);
-                            // todo: audioPlayer.setSource(newSource.release());
-                            newSource.reset(); // todo: delete this
+                            audioPlayer.setSource(newSource.release(), reader->sampleRate);
                         }
                     }
                 });
+        }
+
+        void onPlayPauseButtonClicked()
+        {
+            audioPlayer.start();
+        }
+
+        void onStopButtonClicked()
+        {
+            audioPlayer.stop();
         }
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPlayerComponent)

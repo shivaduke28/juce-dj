@@ -9,8 +9,8 @@ namespace juce_dj
     {
     public:
         MainComponent() :
-            playerComponent1(formatManager),
-            playerComponent2(formatManager)
+            playerComponent1(player1, formatManager),
+            playerComponent2(player2, formatManager)
         {
             setSize(900, 600);
 
@@ -39,15 +39,20 @@ namespace juce_dj
 
         void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override
         {
+            player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
+            player2.prepareToPlay(samplesPerBlockExpected, sampleRate);
         }
 
         void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override
         {
-            bufferToFill.clearActiveBufferRegion();
+            // TODO: get from mixer
+            player1.getNextAudioBlock(bufferToFill);
         }
 
         void releaseResources() override
         {
+            player1.releaseResources();
+            player2.releaseResources();
         }
 
         void paint(juce::Graphics& g) override
@@ -70,6 +75,7 @@ namespace juce_dj
 
     private:
         juce::AudioFormatManager formatManager;
+        AudioPlayer player1, player2;
         AudioPlayerComponent playerComponent1, playerComponent2;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
     };
