@@ -4,10 +4,10 @@
 namespace juce_dj
 {
     // audio source for a single mixer channel used in AudioMixer class
-    class MixerChannelAudioSource : public juce::AudioSource
+    class AudioMixerChannelSource : public juce::AudioSource
     {
     public:
-        MixerChannelAudioSource() {
+        AudioMixerChannelSource() {
         }
 
         void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override

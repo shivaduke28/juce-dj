@@ -1,7 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "MixerChannelAudioSource.h"
+#include "AudioMixerChannelSource.h"
 
 namespace juce_dj
 {
@@ -51,7 +51,7 @@ namespace juce_dj
         }
 
     private:
-        MixerChannelAudioSource& getChannelSource(Channel channel)
+        AudioMixerChannelSource& getChannelSource(Channel channel)
         {
             if (channel == One)
             {
@@ -68,8 +68,8 @@ namespace juce_dj
         juce::MixerAudioSource mixerSource;
         juce::AudioSource* source1 = nullptr;
         juce::AudioSource* source2 = nullptr;
-        MixerChannelAudioSource channelSource1;
-        MixerChannelAudioSource channelSource2;
+        AudioMixerChannelSource channelSource1;
+        AudioMixerChannelSource channelSource2;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioMixer)
     };
