@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="Y2n0Oq" name="JuceDJ" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" cppLanguageStandard="20">
   <MAINGROUP id="UoUfOS" name="JuceDJ">
     <GROUP id="{8C4CD701-7194-790F-F7A6-0660A671BD2D}" name="Source">
+      <FILE id="DacThk" name="MixerChannelAudioSource.h" compile="0" resource="0"
+            file="Source/MixerChannelAudioSource.h"/>
       <FILE id="W3SIxE" name="AudioMixer.h" compile="0" resource="0" file="Source/AudioMixer.h"/>
       <FILE id="FBJuba" name="AudioPlayer.h" compile="0" resource="0" file="Source/AudioPlayer.h"/>
       <FILE id="pbVFog" name="AudioPlayerComponent.h" compile="0" resource="0"
