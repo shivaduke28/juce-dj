@@ -98,11 +98,19 @@ namespace juce_dj
 
         void onPlayPauseButtonClicked()
         {
-            audioPlayer.start();
+            if (audioPlayer.isPlaying())
+            {
+                audioPlayer.stop();
+            }
+            else
+            {
+                audioPlayer.start();
+            }
         }
 
         void onStopButtonClicked()
         {
+            audioPlayer.setPosition(0.0);
             audioPlayer.stop();
         }
 
