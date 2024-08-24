@@ -8,13 +8,19 @@ namespace juce_dj
     {
     public:
         MixerChannelAudioSource() {
-
         }
 
         void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override
         {
             cachedSampleRate = sampleRate;
             cachedSamplesPerBlockExpected = cachedSamplesPerBlockExpected;
+
+            juce::dsp::ProcessSpec spec;
+            spec.sampleRate = sampleRate;
+            spec.maximumBlockSize = samplesPerBlockExpected;
+            spec.numChannels = 2;
+            gainProcessor.prepare(spec);
+
             prepared = true;
 
             if (inputSource != nullptr)
@@ -36,12 +42,12 @@ namespace juce_dj
             if (inputSource == nullptr) return;
             inputSource->getNextAudioBlock(info);
 
-            // taken from AudioTransportSource.cpp
-            for (int i = 0; i < info.buffer->getNumChannels(); i++)
-            {
-                info.buffer->applyGainRamp(i, info.startSample, info.numSamples, lastGain, gain);
-            }
-            lastGain = gain;
+            juce::dsp::AudioBlock<float> audioBlock(*info.buffer);
+            juce::dsp::ProcessContextReplacing<float> context(audioBlock);
+
+            gainProcessor.setGainLinear(gain);
+            gainProcessor.setRampDurationSeconds(info.numSamples / cachedSampleRate);
+            gainProcessor.process(context);
         }
 
         void setSource(juce::AudioSource* source)
@@ -61,8 +67,8 @@ namespace juce_dj
     private:
         juce::AudioSource* inputSource = nullptr;
 
+        juce::dsp::Gain<float> gainProcessor;
         double gain = 0;
-        double lastGain = 0;
         int cachedSamplesPerBlockExpected = 100;
         double cachedSampleRate = 44100;
         bool prepared = false;
