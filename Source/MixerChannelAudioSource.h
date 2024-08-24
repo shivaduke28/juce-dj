@@ -31,13 +31,17 @@ namespace juce_dj
             }
         }
 
-        void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override
+        void getNextAudioBlock(const juce::AudioSourceChannelInfo& info) override
         {
             if (inputSource == nullptr) return;
-            inputSource->getNextAudioBlock(bufferToFill);
+            inputSource->getNextAudioBlock(info);
 
-            // todo: avoid noise when gain changed...
-            bufferToFill.buffer->applyGain(gain);
+            // taken from AudioTransportSource.cpp
+            for (int i = 0; i < info.buffer->getNumChannels(); i++)
+            {
+                info.buffer->applyGainRamp(i, info.startSample, info.numSamples, lastGain, gain);
+            }
+            lastGain = gain;
         }
 
         void setSource(juce::AudioSource* source)
@@ -58,6 +62,7 @@ namespace juce_dj
         juce::AudioSource* inputSource = nullptr;
 
         double gain = 0;
+        double lastGain = 0;
         int cachedSamplesPerBlockExpected = 100;
         double cachedSampleRate = 44100;
         bool prepared = false;
