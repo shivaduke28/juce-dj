@@ -45,6 +45,11 @@ namespace juce_dj
             }
         }
 
+        void setGain(Channel channel, double gain)
+        {
+            // todo: impl
+        }
+
         void prepareToPlay(int samplesPerBlockExpected, double sampleRate)
         {
             mixerSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
