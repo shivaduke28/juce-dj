@@ -16,6 +16,7 @@ namespace juce_dj
             channelFader.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
             channelFader.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
             channelFader.setRange(0, 4);
+            channelFader.onValueChange = [this] {onChannelFaderChanged(); };
 
             addAndMakeVisible(trimKnob);
             addAndMakeVisible(lowKnob);
@@ -32,15 +33,19 @@ namespace juce_dj
             midKnob.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
             highKnob.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
 
-            trimKnob.setRange(-1, 1);
-            lowKnob.setRange(-1, 1);
-            midKnob.setRange(-1, 1);
-            highKnob.setRange(-1, 1);
+            trimKnob.setRange(-0.9999, 0.9999);
+            lowKnob.setRange(-0.9999, 0.9999);
+            midKnob.setRange(-0.9999, 0.9999);
+            highKnob.setRange(-0.9999, 0.9999);
 
             trimKnob.setValue(0, juce::NotificationType::dontSendNotification);
             lowKnob.setValue(0, juce::NotificationType::dontSendNotification);
             midKnob.setValue(0, juce::NotificationType::dontSendNotification);
             highKnob.setValue(0, juce::NotificationType::dontSendNotification);
+
+            lowKnob.onValueChange = [this] {onlowChanged(); };
+            midKnob.onValueChange = [this] {onMidChanged(); };
+            highKnob.onValueChange = [this] {onHighChanged(); };
         }
 
         void resized() override
@@ -57,7 +62,28 @@ namespace juce_dj
     private:
         AudioMixer& audioMixer;
         AudioMixer::Channel channel;
-
         juce::Slider channelFader, lowKnob, midKnob, highKnob, trimKnob;
+
+
+        void onChannelFaderChanged()
+        {
+            audioMixer.setGain(channel, channelFader.getValue());
+        }
+
+        void onlowChanged()
+        {
+            audioMixer.setEqLow(channel, lowKnob.getValue());
+        }
+
+        void onMidChanged()
+        {
+            audioMixer.setEqMid(channel, midKnob.getValue());
+        }
+
+        void onHighChanged()
+        {
+            audioMixer.setEqHigh(channel, highKnob.getValue());
+        }
+
     };
 }

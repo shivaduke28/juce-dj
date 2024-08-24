@@ -35,6 +35,22 @@ namespace juce_dj
             getChannelSource(channel).setGain(gain);
         }
 
+        void setEqLow(Channel channel, double value)
+        {
+            getChannelSource(channel).setEqLow(value);
+        }
+
+        void setEqMid(Channel channel, double value)
+        {
+            getChannelSource(channel).setEqMid(value);
+        }
+
+        void setEqHigh(Channel channel, double value)
+        {
+            getChannelSource(channel).setEqHigh(value);
+        }
+
+
         void prepareToPlay(int samplesPerBlockExpected, double sampleRate)
         {
             mixerSource.prepareToPlay(samplesPerBlockExpected, sampleRate);

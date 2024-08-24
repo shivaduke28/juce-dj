@@ -7,7 +7,10 @@ namespace juce_dj
     class AudioMixerChannelSource : public juce::AudioSource
     {
     public:
-        AudioMixerChannelSource() {
+        using StereoFilter = juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>;
+
+        AudioMixerChannelSource()
+        {
         }
 
         void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override
@@ -19,7 +22,15 @@ namespace juce_dj
             spec.sampleRate = sampleRate;
             spec.maximumBlockSize = samplesPerBlockExpected;
             spec.numChannels = 2;
+
             gainProcessor.prepare(spec);
+            lowShelf.prepare(spec);
+            midPeak.prepare(spec);
+            highShelf.prepare(spec);
+
+            *highShelf.state = *juce::dsp::IIR::Coefficients<float>::makeHighShelf(sampleRate, 10000.0f, 0.707f, 1.0f);
+            *midPeak.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 1000.0f, 0.707f, 1.0f);
+            *lowShelf.state = *juce::dsp::IIR::Coefficients<float>::makeLowShelf(cachedSampleRate, 300.f, 0.707f, 1.0f);
 
             prepared = true;
 
@@ -48,6 +59,9 @@ namespace juce_dj
             gainProcessor.setGainLinear(gain);
             gainProcessor.setRampDurationSeconds(info.numSamples / cachedSampleRate);
             gainProcessor.process(context);
+            lowShelf.process(context);
+            midPeak.process(context);
+            highShelf.process(context);
         }
 
         void setSource(juce::AudioSource* source)
@@ -64,10 +78,30 @@ namespace juce_dj
             gain = newGain;
         }
 
+        void setEqLow(double value)
+        {
+            *lowShelf.state = *juce::dsp::IIR::Coefficients<float>::makeLowShelf(cachedSampleRate, 300.f, 0.707f, 1.0f + value);
+        }
+
+        void setEqMid(double value)
+        {
+            *midPeak.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(cachedSampleRate, 1000.0f, 0.707f, 1.0f + value);
+        }
+
+        void setEqHigh(double value)
+        {
+            *highShelf.state = *juce::dsp::IIR::Coefficients<float>::makeHighShelf(cachedSampleRate, 10000.0f, 0.707f, 1.0f + value);
+        }
+
     private:
         juce::AudioSource* inputSource = nullptr;
 
         juce::dsp::Gain<float> gainProcessor;
+
+        StereoFilter lowShelf;
+        StereoFilter midPeak;
+        StereoFilter highShelf;
+
         double gain = 0;
         int cachedSamplesPerBlockExpected = 100;
         double cachedSampleRate = 44100;
