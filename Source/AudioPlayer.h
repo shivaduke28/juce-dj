@@ -46,6 +46,11 @@ namespace juce_dj
             transportSource.setPosition(position);
         }
 
+        void setSpeed(double speed)
+        {
+            resamplingSource.setResamplingRatio(speed);
+        }
+
         bool isPlaying()
         {
             return transportSource.isPlaying();

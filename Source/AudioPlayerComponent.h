@@ -29,10 +29,16 @@ namespace juce_dj
 
             addAndMakeVisible(stopButton);
             stopButton.setButtonText("stop");
-            stopButton.onClick = [this] {onStopButtonClicked(); };
+            stopButton.onClick = [this] { onStopButtonClicked(); };
 
             addAndMakeVisible(titleLabel);
             titleLabel.setText("No loaded", juce::NotificationType::dontSendNotification);
+
+            addAndMakeVisible(tempoFader);
+            tempoFader.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+            tempoFader.setRange(-8, 8);
+            tempoFader.setValue(0);
+            tempoFader.onValueChange = [this] { onTempoFaderChanged(); };
 
             startTimerHz(40);
         }
@@ -53,6 +59,7 @@ namespace juce_dj
             titleLabel.setBounds(bounds.removeFromTop(50));
             playPauseButton.setBounds(bounds.removeFromTop(50));
             stopButton.setBounds(bounds.removeFromTop(50));
+            tempoFader.setBounds(bounds.removeFromRight(100));
         }
 
         void timerCallback() override
@@ -63,6 +70,7 @@ namespace juce_dj
 
     private:
         juce::TextButton openButton, playPauseButton, stopButton;
+        juce::Slider tempoFader;
         juce::Label titleLabel;
         std::unique_ptr<juce::FileChooser> chooser;
         juce::AudioFormatManager& formatManager;
@@ -112,6 +120,13 @@ namespace juce_dj
         {
             audioPlayer.setPosition(0.0);
             audioPlayer.stop();
+        }
+
+        void onTempoFaderChanged()
+        {
+            auto speed = 1.0 + tempoFader.getValue() * 0.01;
+            audioPlayer.setSpeed(speed);
+            waveformComponent.setSpeed(speed);
         }
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPlayerComponent)
