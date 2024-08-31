@@ -6,6 +6,7 @@
 #include "AudioPlayerComponent.h"
 #include "WaveformComponent.h"
 #include "AudioMixerComponent.h"
+#include "AudioSpectrumComponent.h"
 
 namespace juce_dj
 {
@@ -21,7 +22,7 @@ namespace juce_dj
             playerComponent2(player2, formatManager, waveformComponent2),
             audioMixerComponent(mixer)
         {
-            setSize(900, 600);
+            setSize(900, 800);
 
             if (juce::RuntimePermissions::isRequired(juce::RuntimePermissions::recordAudio)
                 && !juce::RuntimePermissions::isGranted(juce::RuntimePermissions::recordAudio))
@@ -42,6 +43,7 @@ namespace juce_dj
             addAndMakeVisible(waveformComponent1);
             addAndMakeVisible(waveformComponent2);
             addAndMakeVisible(audioMixerComponent);
+            addAndMakeVisible(audioSpectrumComponent);
         }
 
         ~MainComponent() override
@@ -57,6 +59,7 @@ namespace juce_dj
         void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override
         {
             mixer.getNextAudioBlock(bufferToFill);
+            audioSpectrumComponent.setNextAudioBlock(bufferToFill);
         }
 
         void releaseResources() override
@@ -75,6 +78,7 @@ namespace juce_dj
             // thumbnail
             waveformComponent1.setBounds(bounds.removeFromTop(50));
             waveformComponent2.setBounds(bounds.removeFromTop(50));
+            audioSpectrumComponent.setBounds(bounds.removeFromTop(200));
             // deck1
             playerComponent1.setBounds(bounds.removeFromLeft(400));
             // mixer
@@ -92,6 +96,7 @@ namespace juce_dj
         WaveformComponent waveformComponent1;
         WaveformComponent waveformComponent2;
         AudioMixerComponent audioMixerComponent;
+        AudioSpectrumComponent audioSpectrumComponent;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
     };
 }

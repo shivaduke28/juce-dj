@@ -4,6 +4,8 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" cppLanguageStandard="20">
   <MAINGROUP id="UoUfOS" name="JuceDJ">
     <GROUP id="{8C4CD701-7194-790F-F7A6-0660A671BD2D}" name="Source">
+      <FILE id="SsRfFP" name="AudioSpectrumComponent.h" compile="0" resource="0"
+            file="Source/AudioSpectrumComponent.h"/>
       <FILE id="qTgwm3" name="AudioMixerChannelComponent.h" compile="0" resource="0"
             file="Source/AudioMixerChannelComponent.h"/>
       <FILE id="DacThk" name="AudioMixerChannelSource.h" compile="0" resource="0"
